@@ -1,0 +1,30 @@
+Pregunta 2: predecir_consumo (Enfoque sklearn)
+Contexto
+Una empresa de energía quiere ayudar a sus clientes a estimar su factura mensual. Para ello, 
+quieren predecir el consumo eléctrico de un hogar (en kWh) basándose en dos variables meteorológicas y 
+demográficas: la temperatura media exterior del mes y el número de habitantes de la vivienda.
+
+Tu Objetivo
+Crea una función en Python que realice los siguientes pasos de manera secuencial:
+
+Entrenamiento: Entrena un modelo de Regresión Lineal utilizando el DataFrame de características (X) y el 
+array de consumo real (y).
+
+Predicción: Utiliza el modelo entrenado para predecir el consumo eléctrico de un nuevo hogar a partir de 
+los datos provistos en un diccionario.
+
+Conversión: Extrae el valor de la predicción y devuélvelo.
+
+Especificaciones de la Función
+Nombre de la función: predecir_consumo
+
+Argumentos que recibe:
+
+X (pandas.DataFrame): DataFrame con las columnas temperatura y habitantes.
+
+y (numpy.ndarray): Array unidimensional con el consumo eléctrico real registrado para cada fila de X.
+
+nueva_instancia (dict): Un diccionario con los datos del nuevo hogar a predecir, por ejemplo: 
+{'temperatura': 22.5, 'habitantes': 3}.
+
+Tipo de objeto que devuelve: Un número flotante de Python (float) que representa el consumo eléctrico predicho.
