@@ -1,4 +1,4 @@
-# Programaci-n-con-LLMs
+# Programacion-con-LLMs
 
 Julián Esteban Monalve Idarraga
 
