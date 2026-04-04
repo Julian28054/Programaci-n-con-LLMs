@@ -1,73 +1,61 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import Ridge
 
-def generar_caso_de_uso_limpiar_y_escalar():
+def generar_caso_de_uso():
     """
     Genera un caso de uso para el reto 'Limpieza de Outliers y Escalamiento'.
     Retorna una tupla: (dict_argumentos, objeto_resultado_esperado)
     """
-    # --- 1. Creación de Datos Aleatorios ---
-    np.random.seed(42)
-    n_rows = 30
-    col_name = "voltaje"
     
-    # Generamos datos normales y forzamos un outlier masivo al inicio
-    datos = np.random.uniform(10.0, 50.0, n_rows)
-    datos[0] = 500.0  
+    # --- 1. Creación de Datos Aleatorios (Dataset Sintético) ---
+    np.random.seed(42)
+    n_rows = 20
+    col_name = 'voltaje'
+    
+    # Generamos datos y forzamos algunos picos absurdos (outliers)
+    datos = np.random.uniform(10, 50, n_rows)
+    datos[2] = 500.0
+    datos[10] = 450.0
     
     df_input = pd.DataFrame({col_name: datos})
-    # Añadimos una columna objetivo dummy para poder entrenar un Ridge y sacar el R2
-    df_input['target'] = df_input[col_name] * 0.5 + np.random.normal(0, 1, n_rows)
 
-    # --- 2. Lógica de Referencia ---
+    # --- 2. Lógica de Referencia (Lo que debería hacer la función del usuario) ---
     df = df_input.copy()
     
-    # Truncar al percentil 99
+    # Tratamiento de Outliers
     p99 = np.percentile(df[col_name], 99)
     df.loc[df[col_name] > p99, col_name] = p99
     
-    # Escalar entre 0 y 1
+    # Escalamiento
     scaler = MinMaxScaler()
-    df[col_name] = scaler.fit_transform(df[[col_name]])
-    
-    # Separar y entrenar para obtener métricas tipo el código de tu amigo
-    X = df[[col_name]]
-    y = df['target']
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
-    
-    modelo = Ridge()
-    modelo.fit(X_train, y_train)
-    r2 = modelo.score(X_test, y_test)
+    resultado_array = scaler.fit_transform(df[[col_name]]).flatten()
 
     # --- 3. Construcción de la Tupla Final ---
+    # El diccionario de argumentos contiene los parámetros que pide tu función
     argumentos = {
         "df": df_input,
         "columna": col_name
     }
     
+    # El resultado esperado es directamente el array de numpy que devuelve la función
     resultado_esperado = {
-        "r2_score": r2,
-        "model_type": type(modelo),
-        "scaler_type": type(scaler)
+        "array_escalado": resultado_array
     }
 
     return (argumentos, resultado_esperado)
 
 
 # --- EJEMPLO DE USO ---
-inputs, targets = generar_caso_de_uso_limpiar_y_escalar()
+inputs, targets = generar_caso_de_uso()
 
 print("--- ARGUMENTOS DE ENTRADA (Dataset) ---")
-print(inputs['df'].head())
-print("\nColumna a evaluar:", inputs['columna'])
+# Mostramos las primeras filas para ver el outlier en el índice 2
+print(inputs['df'].head()) 
+print(f"\nColumna objetivo: {inputs['columna']}")
 
 print("\n" + "="*40 + "\n")
 
 print("--- RESULTADO ESPERADO ---")
-print(f"R2 Score esperado: {targets['r2_score']:.4f}")
-print(f"Tipo de modelo esperado: {targets['model_type']}")
-print(f"Tipo de scaler esperado: {targets['scaler_type']}")
+print("Primeros 5 elementos del array de numpy transformado:")
+print(targets['array_escalado'][:5])
