@@ -1,0 +1,19 @@
+Pregunta 1: Limpieza de Outliers y Escalamiento (Enfoque sklearn)
+Contexto
+En la industria manufacturera, los sensores de las máquinas a veces registran picos 
+de voltaje absurdos debido a interferencias eléctricas momentáneas. 
+Estos valores atípicos (outliers) pueden confundir a los modelos de Machine Learning. 
+Además, los modelos basados en distancias requieren que los datos estén en una misma escala.
+Tu Objetivo
+Crea una función en Python que realice los siguientes pasos de manera secuencial:
+1.	Tratamiento de Outliers: Reemplaza cualquier valor de la columna indicada que esté por 
+encima del percentil $99$ por el valor exacto de dicho percentil $99$.
+2.	Escalamiento: Aplica una transformación MinMaxScaler de sklearn para llevar los datos resultantes
+al rango $[0, 1]$.
+3.	Conversión: Devuelve los datos ya transformados.
+Especificaciones de la Función
+•	Nombre de la función: limpiar_y_escalar
+•	Argumentos que recibe:
+o	df (pandas.DataFrame): DataFrame que contiene los registros del sensor.
+o	columna (str): El nombre de la columna numérica a la que se le aplicará el proceso.
+•	Tipo de objeto que devuelve: Un array unidimensional de numpy (np.ndarray) con los datos escalados.
