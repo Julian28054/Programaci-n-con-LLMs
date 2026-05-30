@@ -4,11 +4,11 @@ def evaluar_modelo_pavimento(df, target_col):
     from sklearn.metrics import mean_absolute_error
     
     # 1. Separar X e y
-    X = df.drop(columns=[target_col])
+    X = df.drop(target_col, axis=1)
     y = df[target_col]
     
-    # 2. Seleccionar solo columnas numéricas (método más robusto)
-    X = X.select_dtypes(include='number')
+    # 2. Seleccionar solo columnas numéricas (método pandas puro)
+    X = X.select_dtypes(include=['float64', 'float32', 'int64', 'int32'])
     
     # 3. Dividir los datos en entrenamiento y prueba (80/20)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
