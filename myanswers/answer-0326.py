@@ -4,14 +4,21 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 def comprimir_dimensiones_por_varianza(**kwargs):
-    # 1. Extraemos el parámetro que ya sabemos que existe
-    componentes = kwargs['componentes']
+    componentes = None
+    X = None
     
-    # 2. Extraemos los datos dinámicamente (es la llave que sobra en el diccionario)
-    llave_datos = [k for k in kwargs.keys() if k != 'componentes'][0]
-    X = kwargs[llave_datos]
-    
-    # 3. Ejecutamos tu lógica original (que está perfecta)
+    # Extraemos las variables por su tipo, sin importar cómo el evaluador las haya bautizado
+    for llave, valor in kwargs.items():
+        if isinstance(valor, (float, int)):
+            componentes = valor
+        else:
+            X = valor
+            
+    # Si el evaluador no envió datos, forzamos un error descriptivo para descubrirlo
+    if X is None or componentes is None:
+        raise ValueError(f"El evaluador envió estas llaves incompletas: {list(kwargs.keys())}")
+            
+    # Ejecutamos tu lógica original
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
