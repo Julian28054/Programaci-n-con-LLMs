@@ -1,0 +1,26 @@
+Pregunta 4: normalizar_por_grupo (Enfoque pandas / numpy)
+Contexto
+Una cadena nacional de tiendas quiere comparar el rendimiento de ventas de sus empleados. No obstante, 
+una venta de 1000 dólares puede ser excelente en una sucursal de un pueblo pequeño pero mediocre en una 
+sucursal de una gran capital. Para hacer una comparación justa, se debe normalizar el rendimiento de cada 
+empleado usando únicamente la media y desviación estándar de su propia sucursal.
+
+Tu Objetivo
+Crea una función en Python que realice los siguientes pasos de manera secuencial:
+
+Agrupación: Para cada registro, calcula la media y la desviación estándar de la columna ventas, pero agrupando 
+los datos según la columna sucursal.
+
+Normalización: Aplica la fórmula Z-score (restando la media y dividiendo por la desviación estándar) a cada venta, 
+donde se use la media y desviación estándar de la sucursal a la que pertenece ese registro.
+
+Resultado: Devuelve la columna de ventas ya normalizada respetando el orden original de las filas del DataFrame.
+
+Especificaciones de la Función
+Nombre de la función: normalizar_por_grupo
+
+Argumentos que recibe:
+
+df (pandas.DataFrame): DataFrame que contiene las columnas sucursal (texto) y ventas (numérico).
+
+Tipo de objeto que devuelve: Un array de numpy (np.ndarray) con las ventas normalizadas.

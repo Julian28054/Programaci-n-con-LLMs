@@ -1,0 +1,26 @@
+Pregunta 3: calcular_mse_filtrado (Enfoque pandas / numpy)
+Contexto
+Para evaluar qué tan bueno es un modelo de regresión, los científicos de datos suelen programar 
+sus propias métricas antes de usar librerías automáticas. Te han encargado evaluar el Error Cuadrático Medio (MSE)
+de un modelo de predicción de precios. Sin embargo, el sistema a veces registra un precio real de 0 o negativo 
+cuando hay un error de lectura; estos registros deben ignorarse en la métrica.
+
+Tu Objetivo
+Crea una función en Python que realice los siguientes pasos de manera secuencial:
+
+Filtrado: Elimina del DataFrame todas las filas donde el valor de la columna reales sea menor o igual a cero.
+
+Cálculo: Calcula manualmente el Error Cuadrático Medio (MSE) de las filas restantes comparando las columnas 
+reales y predicciones (haciendo el promedio de las diferencias al cuadrado).
+
+Resultado: Devuelve el valor numérico de dicho error.
+
+Especificaciones de la Función
+Nombre de la función: calcular_mse_filtrado
+
+Argumentos que recibe:
+
+df (pandas.DataFrame): DataFrame que contiene únicamente dos columnas llamadas reales y predicciones.
+
+Tipo de objeto que devuelve: Un número flotante de Python (float) que representa el MSE calculado sobre 
+los datos válidos.
