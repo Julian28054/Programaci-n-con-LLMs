@@ -1,9 +1,9 @@
-import pandas as pd
-import numpy as np
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+def comprimir_dimensiones_por_varianza(X, umbral_varianza: float):
+    import pandas as pd
+    import numpy as np
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
 
-def comprimir_dimensiones_por_varianza(X: pd.DataFrame, umbral_varianza: float) -> np.ndarray:
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
