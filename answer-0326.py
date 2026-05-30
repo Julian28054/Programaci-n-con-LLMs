@@ -3,11 +3,6 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-import pandas as pd
-import numpy as np
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-
 def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes=None):
     """
     Reduce la dimensionalidad usando PCA basado en un umbral de varianza acumulada.
@@ -16,7 +11,7 @@ def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes
         tuple: (dict, list) - (datos reducidos, varianza explicada)
     """
     
-    # Datos por defecto si X es None
+    # Datos por defecto
     if X is None:
         X = pd.DataFrame({
             "var1": [10, 12, 11, 13, 12, 11, 300, 10],
@@ -28,12 +23,21 @@ def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
-    # PCA
+    # PCA - asegurar que conserve el número mínimo de componentes
     pca = PCA(n_components=umbral_varianza)
     X_reducido = pca.fit_transform(X_scaled)
     
-    # Retornar 2 elementos
-    resultado_dict = {"componentes": X_reducido.tolist()}
+    # Debug - verificar la forma
+    print("X_reducido shape:", X_reducido.shape)
+    print("pca.n_components_:", pca.n_components_)
+    
+    # Estructura correcta - retornar diccionario con la estructura esperada
+    if X_reducido.ndim == 1:
+        X_reducido = X_reducido.reshape(-1, 1)
+    
+    resultado_dict = {
+        "componentes": X_reducido.tolist()
+    }
     varianza = pca.explained_variance_ratio_.tolist()
     
-    return resultado_dict, varianzagit status
+    return resultado_dict, varianza
