@@ -1,26 +1,26 @@
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import mean_absolute_error
-
 def evaluar_modelo_pavimento(df, target_col):
-    # Seleccionar únicamente columnas numéricas
-    df_num = df.select_dtypes(include=[np.number])
+    # Importación interna para evitar el error "name 'np' is not defined"
+    import numpy as np
+    from sklearn.model_selection import train_test_split
+    from sklearn.tree import DecisionTreeRegressor
+    from sklearn.metrics import mean_absolute_error
 
-    # Separar variables predictoras y objetivo
-    X = df_num.drop(columns=[target_col])
-    y = df_num[target_col]
-
-    # División 80/20
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    # Entrenamiento del modelo
-    modelo = DecisionTreeRegressor(random_state=42)
-    modelo.fit(X_train, y_train)
-
-    # Predicción y cálculo del MAE
-    y_pred = modelo.predict(X_test)
-
-    return float(mean_absolute_error(y_test, y_pred))
+    # 1. Separar X e y usando target_col
+    X = df.drop(columns=[target_col])
+    y = df[target_col]
+    
+    # 2. Seleccionar solo columnas numéricas
+    X = X.select_dtypes(include=[np.number])
+    
+    # 3. Dividir los datos en entrenamiento y prueba (80/20)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    
+    # 4. Entrenar un modelo DecisionTreeRegressor
+    model = DecisionTreeRegressor()
+    model.fit(X_train, y_train)
+    
+    # 5. Calcular el error absoluto medio (MAE)
+    y_pred = model.predict(X_test)
+    mae = mean_absolute_error(y_test, y_pred)
+    
+    return float(mae)
