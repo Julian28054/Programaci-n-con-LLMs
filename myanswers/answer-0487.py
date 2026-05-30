@@ -20,5 +20,5 @@ def evaluar_modelo_pavimento(df, target_col):
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
 
-    # Devolver exactamente el MAE calculado
+    # Devolver el MAE tal cual, sin redondear ni transformar
     return mae
