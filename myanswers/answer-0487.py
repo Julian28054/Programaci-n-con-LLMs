@@ -33,4 +33,3 @@ def evaluar_modelo_pavimento(df, target_col):
     mae = mean_absolute_error(y_test, y_pred)
     
     return mae
-
