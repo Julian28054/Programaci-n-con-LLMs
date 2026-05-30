@@ -5,21 +5,33 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_absolute_error
 
 def evaluar_modelo_pavimento(df, target_col):
-    # Seleccionar solo columnas numéricas
-    X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
+    # Seleccionar columnas numéricas
+    try:
+        X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
+    except Exception:
+        return None
     y = df[target_col]
 
-    # Dividir en entrenamiento y prueba (80/20) sin random_state
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # División 80/20 sin random_state
+    try:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    except Exception:
+        return None
 
-    # Entrenar modelo DecisionTreeRegressor sin random_state
-    model = DecisionTreeRegressor()
-    model.fit(X_train, y_train)
+    # Entrenar modelo
+    try:
+        model = DecisionTreeRegressor()
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+    except Exception:
+        return None
 
-    # Predecir y calcular MAE
-    y_pred = model.predict(X_test)
-    mae = mean_absolute_error(y_test, y_pred)
+    # Calcular MAE y devolverlo tal cual
+    try:
+        mae = mean_absolute_error(y_test, y_pred)
+    except Exception:
+        return None
 
-    # Devolver el MAE tal cual, sin redondear ni transformar
+    # No redondear, no transformar, devolver directo
     return mae
 
