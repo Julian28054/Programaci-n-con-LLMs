@@ -3,27 +3,16 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-def comprimir_dimensiones_por_varianza(X=None, umbral_varianza=0.95, componentes=None):
+def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes=None):
     """
     Reduce la dimensionalidad usando PCA basado en un umbral de varianza acumulada.
-    
-    Argumentos:
-    -----------
-    X : pd.DataFrame
-        DataFrame con las características originales
-    umbral_varianza : float
-        Valor entre 0 y 1 (ej. 0.95 para 95%)
-    componentes : any
-        Parámetro de compatibilidad (ignorado)
     
     Retorna:
     --------
     tuple: (dict, list)
-        - Diccionario con las coordenadas reducidas
-        - Lista con la varianza explicada por cada componente
     """
     
-    # Si X es None, usar datos de ejemplo del problema
+    # Si X es None, usar datos de ejemplo
     if X is None:
         X = pd.DataFrame({
             "var1": [10, 12, 11, 13, 12, 11, 300, 10],
