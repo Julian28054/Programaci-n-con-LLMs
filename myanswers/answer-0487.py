@@ -1,18 +1,19 @@
-def evaluar_modelo_pavimento(df, target_col):
-    # Importaciones internas obligatorias para el entorno del evaluador
-    import pandas as pd
-    from sklearn.model_selection import train_test_split
-    from sklearn.tree import DecisionTreeRegressor
-    from sklearn.metrics import mean_absolute_error
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
 
+def evaluar_modelo_pavimento(df, target_col):
     # 1. Separar X e y usando target_col
     X = df.drop(columns=[target_col])
     y = df[target_col]
     
-    # 2. Seleccionar solo columnas numéricas (usando el string 'number' de pandas)
-    X = X.select_dtypes(include=['number'])
+    # 2. Seleccionar solo columnas numéricas en X
+    X = X.select_dtypes(include=[np.number])
     
     # 3. Dividir los datos en entrenamiento y prueba (80/20)
+    # Nota: No fijamos un random_state para que el comportamiento sea dinámico como en tu generador
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
     # 4. Entrenar un modelo DecisionTreeRegressor de sklearn
