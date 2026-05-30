@@ -21,11 +21,11 @@ def evaluar_modelo_pavimento(df, target_col):
     X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
     y = df[target_col]
     
-    # 2. Dividir en entrenamiento y prueba (80/20)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # 2. Dividir en entrenamiento y prueba (80/20) SIN semilla fija
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
-    # 3. Entrenar modelo DecisionTreeRegressor
-    model = DecisionTreeRegressor(random_state=42)
+    # 3. Entrenar modelo DecisionTreeRegressor SIN semilla fija
+    model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
     
     # 4. Predecir y calcular MAE
