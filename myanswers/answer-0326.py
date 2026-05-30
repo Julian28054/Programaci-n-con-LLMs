@@ -5,22 +5,22 @@ from sklearn.preprocessing import StandardScaler
 
 def comprimir_dimensiones_por_varianza(X, umbral_varianza):
     """
-    Reduce la dimensionalidad de un conjunto de datos usando PCA,
-    conservando la varianza especificada.
+    Reduce la dimensionalidad de un conjunto de datos utilizando PCA,
+    conservando al menos el porcentaje de varianza especificado.
 
     Parámetros:
-    X (pd.DataFrame): Datos originales.
-    umbral_varianza (float): Porcentaje de varianza a conservar (0-1).
+        X (pd.DataFrame): Datos originales.
+        umbral_varianza (float): Valor entre 0 y 1.
 
     Retorna:
-    np.ndarray: Datos transformados al espacio reducido.
+        np.ndarray: Datos transformados al espacio reducido.
     """
-    
+
     # Escalar los datos
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Aplicar PCA conservando el porcentaje de varianza deseado
+    # Aplicar PCA conservando la varianza deseada
     pca = PCA(n_components=umbral_varianza)
     X_reducido = pca.fit_transform(X_scaled)
 
