@@ -1,17 +1,14 @@
 def evaluar_modelo_pavimento(df, target_col):
+    import numpy as np
     from sklearn.model_selection import train_test_split
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.metrics import mean_absolute_error
-    import numpy as np
     
-    # EXACTAMENTE igual que el generador - línea por línea
     X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
     y = df[target_col]
     
-    # SIN random_state - igual que el generador
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
-    # SIN random_state - igual que el generador
     model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
     
