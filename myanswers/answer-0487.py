@@ -22,3 +22,4 @@ def evaluar_modelo_pavimento(df, target_col):
 
     # Devolver el MAE tal cual, sin redondear ni transformar
     return mae
+
