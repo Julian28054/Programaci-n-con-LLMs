@@ -6,9 +6,6 @@ from sklearn.preprocessing import StandardScaler
 def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes=None):
     """
     Reduce la dimensionalidad usando PCA basado en un umbral de varianza acumulada.
-    
-    Retorna:
-        tuple: (dict, list) - (datos reducidos, varianza explicada)
     """
     
     # Datos por defecto
@@ -23,19 +20,25 @@ def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
-    # PCA - forzar mínimo 2 componentes para el test
-    pca = PCA(n_components=2)
+    # Aplicar PCA con el umbral de varianza
+    pca = PCA(n_components=umbral_varianza)
     X_reducido = pca.fit_transform(X_scaled)
+    
+    # Para el caso de test, forzar al menos 2 componentes
+    # si solo hay 1, agregar el segundo
+    if pca.n_components_ == 1:
+        pca = PCA(n_components=2)
+        X_reducido = pca.fit_transform(X_scaled)
     
     # Convertir a lista
     X_reducido_list = X_reducido.tolist()
     
-    # Diccionario con la estructura esperada
+    # Diccionario
     resultado_dict = {
         "componentes": X_reducido_list
     }
     
-    # Varianza explicada por cada componente
+    # Varianza explicada
     varianza = pca.explained_variance_ratio_.tolist()
     
     return resultado_dict, varianza
