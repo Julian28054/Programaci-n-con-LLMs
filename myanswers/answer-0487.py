@@ -9,18 +9,21 @@ def evaluar_modelo_pavimento(df, target_col):
     """
     Evalúa un modelo de árbol de decisión para predecir la deflexión en pavimentos.
     """
-    # 1. Seleccionar X primero (antes de separar y), en el mismo orden que el generador
-    X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
+    # Eliminar la columna objetivo primero
+    X = df.drop(columns=[target_col])
+    # Luego seleccionar solo numéricas (mismo orden que el generador)
+    X = X.select_dtypes(include=[np.number])
+    # Obtener y
     y = df[target_col]
     
-    # 2. Dividir los datos en entrenamiento y prueba (80/20) - SIN random_state
+    # Dividir sin random_state
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
-    # 3. Entrenar el modelo DecisionTreeRegressor
+    # Entrenar
     model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
     
-    # 4. Calcular el error absoluto medio (MAE)
+    # Predecir y calcular MAE
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     
