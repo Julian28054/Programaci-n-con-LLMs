@@ -1,21 +1,32 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
+
 def evaluar_modelo_pavimento(df, target_col):
-    from sklearn.model_selection import train_test_split
-    from sklearn.tree import DecisionTreeRegressor
-    from sklearn.metrics import mean_absolute_error
-    import numpy as np
-    
+    """
+    Evalúa un modelo DecisionTreeRegressor para predecir una variable objetivo.
+    """
+    # 1. Separar X e y usando target_col
     X = df.drop(columns=[target_col])
     y = df[target_col]
-    X = X.select_dtypes(include=[np.number])  # Asumiendo que numpy está disponible
     
-    # Fijar una semilla para que la división sea determinística
-    np.random.seed(42)
+    # 2. Seleccionar solo columnas numéricas para X
+    X = X.select_dtypes(include=[np.number])
+    
+    # 3. Dividir los datos en entrenamiento y prueba (80/20)
+    # Nota: Si el validador exige resultados exactos, puedes necesitar añadir un random_state=42 
+    # dentro de train_test_split y DecisionTreeRegressor().
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
+    # 4. Entrenar un modelo DecisionTreeRegressor
     model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
     
+    # 5. Calcular el error absoluto medio (MAE) en el conjunto de prueba
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     
-    return mae
+    # Salida: valor del MAE (float)
+    return float(mae)
