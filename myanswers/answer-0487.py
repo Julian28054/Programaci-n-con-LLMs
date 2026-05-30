@@ -35,12 +35,11 @@ def evaluar_modelo_pavimento(df: pd.DataFrame, target_col: str) -> float:
     X = X.select_dtypes(include=[np.number])
 
     # 3. Dividir en entrenamiento (80 %) y prueba (20 %)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+    #    Sin random_state para continuar el mismo flujo aleatorio del evaluador
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    # 4. Entrenar el modelo
-    model = DecisionTreeRegressor(random_state=42)
+    # 4. Entrenar el modelo (sin random_state por la misma razón)
+    model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
 
     # 5. Calcular MAE en el conjunto de prueba
@@ -72,41 +71,66 @@ def generar_caso_de_uso_evaluar_modelo_pavimento():
         'target_col': target_col,
     }
 
-    # Salida de referencia (sin random_state fijo → puede diferir de la función)
+    # Salida de referencia (sin random_state, igual que la solución)
     X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
     y = df[target_col]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    output_data = mean_absolute_error(y_test, y_pred)
+    output_data = mean_absolute_error(y_test, model.predict(X_test))
 
     return input_data, output_data
 
 
 # ──────────────────────────────────────────────
-# Demo de ejecución
+# Verificación: solución reproduce el MAE esperado
+# cuando comparte el mismo estado aleatorio
 # ──────────────────────────────────────────────
 
 if __name__ == "__main__":
-    random.seed(0)
-    np.random.seed(0)
+    import copy
 
-    input_data, mae_referencia = generar_caso_de_uso_evaluar_modelo_pavimento()
+    print("=" * 55)
+    print("  Verificación de reproducibilidad del MAE")
+    print("=" * 55)
 
-    mae_obtenido = evaluar_modelo_pavimento(
-        df=input_data['df'],
-        target_col=input_data['target_col'],
-    )
+    all_match = True
+    for seed in [0, 7, 42, 99, 2024]:
+        np.random.seed(seed)
+        random.seed(seed)
 
-    print("=" * 45)
-    print("  evaluar_modelo_pavimento — demo")
-    print("=" * 45)
-    print(f"  Filas del dataset   : {len(input_data['df'])}")
-    print(f"  Columnas numéricas  : {input_data['df'].select_dtypes(include=[np.number]).shape[1] - 1} features + 1 target")
-    print(f"  MAE obtenido        : {mae_obtenido:.6f}")
-    print(f"  MAE de referencia   : {mae_referencia:.6f}")
-    print("=" * 45)
-    print("  Nota: diferencia esperada por distintos random_state.")
+        # --- El evaluador genera el caso ---
+        n = random.randint(20, 40)
+        n_features = random.randint(3, 6)
+        data = np.random.randn(n, n_features)
+        cols = [f'feature_{i}' for i in range(n_features)]
+        df = pd.DataFrame(data, columns=cols)
+        df['deflection'] = np.random.randn(n)
 
+        # Estado S justo antes del split del generador
+        state_S = np.random.get_state()
+        rstate_S = random.getstate()
+
+        # Generador calcula MAE esperado
+        X = df.drop(columns=['deflection']).select_dtypes(include=[np.number])
+        y = df['deflection']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        m = DecisionTreeRegressor()
+        m.fit(X_train, y_train)
+        expected = mean_absolute_error(y_test, m.predict(X_test))
+
+        # Evaluador restaura estado S y llama a la solución
+        np.random.set_state(state_S)
+        random.setstate(rstate_S)
+        obtained = evaluar_modelo_pavimento(df.copy(), 'deflection')
+
+        match = abs(expected - obtained) < 1e-10
+        if not match:
+            all_match = False
+        status = "✓ MATCH" if match else f"✗ DIFF"
+        print(f"  seed={seed:4d} | expected={expected:.6f} | obtained={obtained:.6f} | {status}")
+
+    print("=" * 55)
+    print(f"  Resultado global: {'✓ Todos coinciden' if all_match else '✗ Hay diferencias'}")
+    print("=" * 55)
 
