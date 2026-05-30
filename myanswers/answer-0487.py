@@ -16,4 +16,6 @@ def evaluar_modelo_pavimento(df, target_col):
 
     y_pred = model.predict(X_test)
 
-    return mean_absolute_error(y_test, y_pred)
+    mae = mean_absolute_error(y_test, y_pred)
+
+    return mae
