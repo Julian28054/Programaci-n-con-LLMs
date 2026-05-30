@@ -3,18 +3,14 @@ def evaluar_modelo_pavimento(df, target_col):
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.metrics import mean_absolute_error
     
-    # CRÍTICO: Usar drop con axis=1 o columns, ambos funcionan
-    X = df.drop(target_col, axis=1)
+    X = df.drop(columns=[target_col])
     y = df[target_col]
     
-    # CRÍTICO: include=[np.number] pero como no tenemos numpy, usamos 'number'
-    # El generador usa np.number, que es equivalente a 'number' en pandas
-    X = X.select_dtypes(include='number')
+    # Forzar selección numérica como lo haría np.number
+    X = X.select_dtypes(include=['int64', 'float64', 'int32', 'float32'])
     
-    # CRÍTICO: Sin random_state
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
-    # CRÍTICO: Sin random_state
     model = DecisionTreeRegressor()
     model.fit(X_train, y_train)
     
