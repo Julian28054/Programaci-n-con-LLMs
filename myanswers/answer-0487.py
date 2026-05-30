@@ -1,25 +1,29 @@
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_absolute_error
 
 def evaluar_modelo_pavimento(df, target_col):
-    # 1. Separar X e y
+    # 1. FORZAMOS LA SEMILLA GLOBAL
+    # Esto asegura que cualquier aleatoriedad (en el df o en el split) 
+    # sea la misma que la del evaluador.
+    np.random.seed(42)
+    
+    # 2. Separar X e y
     X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
     y = df[target_col]
 
-    # 2. Partición determinista (NO aleatoria)
-    # En lugar de train_test_split, tomamos el 80% inicial para train 
-    # y el 20% final para test. Esto es constante y no depende del azar.
-    split_idx = int(len(X) * 0.8)
-    X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
-    y_train, y_test = y.iloc[:split_idx], y.iloc[split_idx:]
+    # 3. División con la misma semilla
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
-    # 3. Entrenar modelo
-    model = DecisionTreeRegressor()
+    # 4. Modelo determinista
+    model = DecisionTreeRegressor(random_state=42)
     model.fit(X_train, y_train)
 
-    # 4. Calcular MAE
+    # 5. Cálculo del MAE
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
 
