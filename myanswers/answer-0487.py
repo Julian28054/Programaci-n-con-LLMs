@@ -1,7 +1,4 @@
 def evaluar_modelo_pavimento(df, target_col):
-    # TODAS las importaciones DENTRO de la función
-    import pandas as pd
-    import numpy as np
     from sklearn.model_selection import train_test_split
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.metrics import mean_absolute_error
@@ -10,8 +7,8 @@ def evaluar_modelo_pavimento(df, target_col):
     X = df.drop(columns=[target_col])
     y = df[target_col]
     
-    # 2. Seleccionar solo columnas numéricas
-    X = X.select_dtypes(include=[np.number])
+    # 2. Seleccionar solo columnas numéricas (sin usar numpy)
+    X = X.select_dtypes(include=['int64', 'float64', 'int32', 'float32'])
     
     # 3. Dividir los datos en entrenamiento y prueba (80/20)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
