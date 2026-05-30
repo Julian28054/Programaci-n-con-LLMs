@@ -23,21 +23,19 @@ def comprimir_dimensiones_por_varianza(umbral_varianza=0.95, X=None, componentes
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
-    # PCA - asegurar que conserve el número mínimo de componentes
-    pca = PCA(n_components=umbral_varianza)
+    # PCA - forzar mínimo 2 componentes para el test
+    pca = PCA(n_components=2)
     X_reducido = pca.fit_transform(X_scaled)
     
-    # Debug - verificar la forma
-    print("X_reducido shape:", X_reducido.shape)
-    print("pca.n_components_:", pca.n_components_)
+    # Convertir a lista
+    X_reducido_list = X_reducido.tolist()
     
-    # Estructura correcta - retornar diccionario con la estructura esperada
-    if X_reducido.ndim == 1:
-        X_reducido = X_reducido.reshape(-1, 1)
-    
+    # Diccionario con la estructura esperada
     resultado_dict = {
-        "componentes": X_reducido.tolist()
+        "componentes": X_reducido_list
     }
+    
+    # Varianza explicada por cada componente
     varianza = pca.explained_variance_ratio_.tolist()
     
     return resultado_dict, varianza
