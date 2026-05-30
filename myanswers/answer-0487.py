@@ -1,4 +1,5 @@
 def evaluar_modelo_pavimento(df, target_col):
+    # TODAS las importaciones DENTRO de la función
     import pandas as pd
     import numpy as np
     from sklearn.model_selection import train_test_split
