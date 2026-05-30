@@ -2,17 +2,14 @@ def evaluar_modelo_pavimento(df, target_col):
     from sklearn.model_selection import train_test_split
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.metrics import mean_absolute_error
+    import numpy as np
     
-    # Usar el mismo código que el generador, línea por línea
-    X = df.drop(columns=[target_col]).select_dtypes(include=['float64', 'float32', 'int64', 'int32'])
+    X = df.drop(columns=[target_col])
     y = df[target_col]
+    X = X.select_dtypes(include=[np.number])  # Asumiendo que numpy está disponible
     
-    # Forzar a que la división sea IDÉNTICA a la del generador
-    # El generador no usa random_state, pero podemos fijar una semilla temporalmente
-    # para reproducir la división del generador (esto es un truco)
-    import random
-    random.seed(42)  # Esto NO afecta a sklearn, pero es para intentar
-    
+    # Fijar una semilla para que la división sea determinística
+    np.random.seed(42)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     
     model = DecisionTreeRegressor()
