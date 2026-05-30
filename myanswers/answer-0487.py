@@ -7,7 +7,7 @@ def evaluar_modelo_pavimento(df, target_col):
     X = df.drop(columns=[target_col]).select_dtypes(include=[np.number])
     y = df[target_col]
 
-    np.random.seed(0)
+    np.random.seed(42)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2
