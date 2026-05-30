@@ -1,3 +1,8 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
+
 def evaluar_modelo_pavimento(df, target_col):
     """
     Evalúa un modelo de regresión de árbol de decisión para predecir la deflexión del pavimento.
@@ -18,22 +23,19 @@ def evaluar_modelo_pavimento(df, target_col):
     X = df.drop(columns=[target_col])
     y = df[target_col]
     
-    # 2. Seleccionar solo columnas numéricas (usando pandas, sin numpy)
+    # 2. Seleccionar solo columnas numéricas
     X = X.select_dtypes(include=['number'])
     
     # 3. Dividir los datos en entrenamiento y prueba (80/20)
-    from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
     
     # 4. Entrenar un modelo DecisionTreeRegressor
-    from sklearn.tree import DecisionTreeRegressor
     model = DecisionTreeRegressor(random_state=42)
     model.fit(X_train, y_train)
     
     # 5. Calcular el MAE en el conjunto de prueba
-    from sklearn.metrics import mean_absolute_error
     y_pred = model.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred)
     
