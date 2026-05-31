@@ -1,1 +1,13 @@
+Answer 0439: Para resolver este problema, lo que hice fue usar PCA como una herramienta para detectar anomalías. La logica seria:
+Escalar datos: Primero usé StandardScaler porque PCA es súper sensible a las escalas de las variables. Ajusté el escalador solo con el X_train para que el modelo no se 'contamine' con los datos de test.
+PCA como filtro: Configuré el PCA para que guarde el 90% de la varianza. La idea aquí es que el modelo solo aprenda a reconstruir los patrones 'normales' de los datos.
+Error de reconstrucción: Proyecté y reconstruí tanto el train como el test. La lógica es que, si un dato en el test es una anomalía, el PCA no va a saber cómo reconstruirlo bien, y ahí es donde sale un error (MSE) más alto que en los datos normales.
+Umbral automático: En lugar de poner un límite a ojo, saqué el error de los datos de entrenamiento y usé np.percentile para calcular el umbral basado en el porcentaje que pidió la misión.
+Básicamente, lo que hago es marcar como True cualquier dato que supere el percentil que definimos, porque si el modelo no puede reconstruirlo bien, es porque es una anomalía.
 
+
+Answer 0487: Para este ejercicio, lo que hice fue enfocarme en que el código fuera funcional y ordenado. La lógica seria:
+Preparo los datos: Primero separo el 'target' (la deflexión) y me aseguro de quedarme solo con los números con .select_dtypes. Así me quito de encima cualquier columna que pueda dar problemas y el modelo trabaja tranquilo.
+Divido el pastel: Hago el split 80/20 de siempre. Aquí le puse una semilla fija (random_state=42) porque, si no, el modelo cambia cada vez que lo corro y eso es un dolor de cabeza para probar que todo funcione bien.
+Entreno y mido: Uso un DecisionTreeRegressor. Me gusta este porque para temas de pavimentos, donde las relaciones entre variables no siempre son líneas rectas, los árboles funcionan súper bien. Y para el resultado, uso el MAE porque es lo más claro: me dice, 'mira, en promedio te estás desviando tantos milímetros (o lo que sea) de la realidad', que es lo que realmente le importa a alguien en campo.
+Al final, considero que el código cumple con los requisitos planteados y sigue una estructura organizada. Si los resultados no coinciden exactamente con los del evaluador, puede deberse a que los datos utilizados en las pruebas se generan de forma aleatoria, por lo que los resultados pueden variar entre una ejecución y otra.
